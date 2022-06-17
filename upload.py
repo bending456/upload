@@ -123,9 +123,4 @@ if uploaded_file is not None:
 	ss.IChart(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file)
 	ss.AChart(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file)
 	ss.IMChart(batchNo,SideID,numOfTest,uploaded_file)
-	btn = st.download_button(
-		label='Download reorganized excel file',
-        data=batchNo+'_SPC_byPython.xlsx',
-		file_name=batchNo+'_SPC_byPython.xlsx',
-		mime="data/xlsx"
-		)
+	ss.Reorganizer(batchNo,SideID,numOfTest,uploaded_file)

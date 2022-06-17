@@ -69,7 +69,7 @@ def Exporter(batchNo,
     filename = batchNo
 
     [data1, data2, time] = DataExtract(batchNo, SideID, numOfTest,uploaded_file)
-
+    
     workbook = xlsxwriter.Workbook(filename+'_SPC_byPython.xlsx')
     for key in data1.keys():
         # For individual side of SPC 
@@ -115,6 +115,70 @@ def Exporter(batchNo,
     workbook.close()         
     
     return data1, data2, time
+
+def Reorganizer(batchNo,
+                SideID,
+                numOfTest,
+                uploaded_file):
+
+    filename = batchNo
+
+    [data1, data2, time] = DataExtract(batchNo, SideID, numOfTest,uploaded_file)
+    output = BytesIO()
+    workbook = xlsxwriter.Workbook(output, {'in_memory':True})
+     
+    for key in data1.keys():
+        # For individual side of SPC 
+        for ID in SideID:
+            worksheet = workbook.add_worksheet(key+'_side'+str(ID)+'_SPC')
+            worksheet.write(0,0,'SampleID')
+            
+            if key == 'Weight':
+                column_name = 'Tablet Weigth (mg)'
+            elif key == 'Thickness':
+                column_name = 'Tablet Thickness (mm)'
+            else:
+                column_name = 'Tablet Hardness (kp)'
+
+            worksheet.write(0,1,column_name)
+            row = 1
+            col = 0
+            for n, element in enumerate(data2[key][str(ID)]): # There may be the case we don't have some attribute for 1,2 layers if there are 3 layers
+                worksheet.write(row,col,1+n//10)
+                worksheet.write(row,col+1, element)
+                row += 1
+        
+        # For both side SPC
+        worksheet = workbook.add_worksheet(key+'_both_side_SPC')
+        worksheet.write(0,0,'SampleID')
+        
+        if key == 'Weight':
+            column_name = 'Tablet Weigth (mg)'
+        elif key == 'Thickness':
+            column_name = 'Tablet Thickness (mm)'
+        else:
+            column_name = 'Tablet Hardness (kp)'
+
+        worksheet.write(0,1,column_name)
+        row = 1
+        col = 0
+        
+        for n, element in enumerate(data1[key]):
+            worksheet.write(row,col,1+n//20)
+            worksheet.write(row,col+1, element)
+            row += 1
+                
+    workbook.close()         
+    
+
+    btn = st.download_button(
+		label='Download reorganized excel file',
+        data=output.getvalue(),
+		file_name=filename+'_SPC_byPython.xlsx',
+		mime="application/vnd.ms-excel"
+		)
+        
+    return 
 
 
 def normal_dist(batchNo,SideID,numOfTest,uploaded_file):
@@ -198,8 +262,16 @@ def normal_dist(batchNo,SideID,numOfTest,uploaded_file):
         plt.ylabel('Frequency/PDF')
         plt.tight_layout()
         
-        plt.savefig(batchNo+'_ND_'+key+'_both_side.png')
-
+        output_name = batchNo+'_ND_'+key+'_both_side.png'
+        img = BytesIO()
+        plt.savefig(img,format='png')
+        st.image(img, caption=f"Image Predicted")        
+        btn = st.download_button(
+            label="Download Image",
+            data=img,
+            file_name=output_name,
+            mime="img/png"
+        )
 
 def ecdf(data):
     """ Compute ECDF """
@@ -250,7 +322,17 @@ def ECDFgen(batchNo,SideID,numOfTest,uploaded_file):
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
                         fancybox=True, shadow=True,ncol=2) 
             plt.tight_layout()
-            plt.savefig(batchNo+'_ECDF_'+key+'_side_'+str(ID)+'.png')
+
+            output_name = batchNo+'_ECDF_'+key+'_side_'+str(ID)+'.png'
+            img = BytesIO()
+            plt.savefig(img,format='png')
+            st.image(img, caption=f"Image Predicted")        
+            btn = st.download_button(
+                label="Download Image",
+                data=img,
+                file_name=output_name,
+                mime="img/png"
+            )
 
         data = data1[key]
         # Fit a normal distribution to
@@ -294,8 +376,17 @@ def ECDFgen(batchNo,SideID,numOfTest,uploaded_file):
         plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
                     fancybox=True, shadow=True,ncol=2) 
         plt.tight_layout()
-        plt.savefig(batchNo+'_ECDF_'+key+'_both_side.png')
 
+        output_name = batchNo+'_ECDF_'+key+'_side_'+str(ID)+'.png'
+        img = BytesIO()
+        plt.savefig(img,format='png')
+        st.image(img, caption=f"Image Predicted")        
+        btn = st.download_button(
+            label="Download Image",
+            data=img,
+            file_name=output_name,
+            mime="img/png"
+        )
 
 def IChart(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file):
     [data1,data2,time] = Exporter(batchNo,SideID,numOfTest,uploaded_file)
@@ -349,7 +440,17 @@ def IChart(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file):
 
         ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),fancybox=True, shadow=True, ncol=n_col,fontsize=10)   
         plt.tight_layout()
-        plt.savefig(batchNo+'_IChart_'+key+'.png')
+        
+        output_name = batchNo+'_IChart_'+key+'.png'
+        img = BytesIO()
+        plt.savefig(img,format='png')
+        st.image(img, caption=f"Image Predicted")        
+        btn = st.download_button(
+            label="Download Image",
+            data=img,
+            file_name=output_name,
+            mime="img/png"
+        )
 
 
 def AChart(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file):
@@ -410,7 +511,17 @@ def AChart(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file):
 
         ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),fancybox=True, shadow=True, ncol=n_col,fontsize=10)   
         plt.tight_layout()
-        plt.savefig(batchNo+'_AChart_'+key+'.png')
+
+        output_name = batchNo+'_AChart_'+key+'.png'
+        img = BytesIO()
+        plt.savefig(img,format='png')
+        st.image(img, caption=f"Image Predicted")        
+        btn = st.download_button(
+            label="Download Image",
+            data=img,
+            file_name=output_name,
+            mime="img/png"
+        )
 
 def IMChart(batchNo,SideID,numOfTest,uploaded_file):
     [data1,data2,time] = Exporter(batchNo,SideID,numOfTest,uploaded_file)
@@ -538,7 +649,17 @@ def IMChart(batchNo,SideID,numOfTest,uploaded_file):
             axs[1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.225), 
             fancybox=True, shadow=True, ncol=n_col2, fontsize=10)
             plt.tight_layout()
-            plt.savefig(batchNo+'_I-MR_'+key+'_side_'+str(ID)+'.png')
+            
+            output_name = batchNo+'_I-MR_'+key+'_side_'+str(ID)+'.png'
+            img = BytesIO()
+            plt.savefig(img,format='png')
+            st.image(img, caption=f"Image Predicted")        
+            btn = st.download_button(
+                label="Download Image",
+                data=img,
+                file_name=output_name,
+                mime="img/png"
+            )
 
         x = data1[key]
         # Create dummy data
@@ -645,7 +766,17 @@ def IMChart(batchNo,SideID,numOfTest,uploaded_file):
         axs[0].legend(loc='upper center', bbox_to_anchor=(0.5, -0.055), fancybox=True, shadow=True, ncol=n_col1, fontsize=10)   
         axs[1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.225), fancybox=True, shadow=True, ncol=n_col2, fontsize=10)
         plt.tight_layout()
-        plt.savefig(batchNo+'_I-MR_'+key+'_both_side.png')
+        
+        output_name = batchNo+'_I-MR_'+key+'_both_side.png'
+        img = BytesIO()
+        plt.savefig(img,format='png')
+        st.image(img, caption=f"Image Predicted")        
+        btn = st.download_button(
+            label="Download Image",
+            data=img,
+            file_name=output_name,
+            mime="img/png"
+        )
 
 
 def DSCA(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file):
@@ -737,7 +868,16 @@ def DSCA(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file):
             ax[1].set_xlim([LSL-(USL-LSL)/2,USL+(USL-LSL)/2])
             plt.tight_layout()
 
-            plt.savefig(batchNo+'_StatSummary_'+key+'_side_'+str(ID)+'.png')
+            output_name = batchNo+'_StatSummary_'+key+'_side_'+str(ID)+'.png'
+            img = BytesIO()
+            plt.savefig(img,format='png')
+            st.image(img, caption=f"Image Predicted")        
+            btn = st.download_button(
+                label="Download Image",
+                data=img,
+                file_name=output_name,
+                mime="img/png"
+            )
 
 
         data = data1[key]
@@ -796,4 +936,14 @@ def DSCA(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file):
         ax[1].set_ylabel('Probability/PDF')
         ax[1].set_xlim([LSL-(USL-LSL)/2,USL+(USL-LSL)/2])
         plt.tight_layout()
-        plt.savefig(batchNo+'_StatSummary_'+key+'_both_side.png')
+        
+        output_name = batchNo+'_StatSummary_'+key+'_both_side.png'
+        img = BytesIO()
+        plt.savefig(img,format='png')
+        st.image(img, caption=f"Image Predicted")        
+        btn = st.download_button(
+            label="Download Image",
+            data=img,
+            file_name=output_name,
+            mime="img/png"
+        )

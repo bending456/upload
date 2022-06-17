@@ -2,14 +2,14 @@ import numpy as np
 import math
 import pandas as pd 
 from pandas import DataFrame, read_csv
-import statsmodels.api as sm
+#import statsmodels.api as sm
 import xlsxwriter
 from scipy.stats import norm
 import matplotlib.pyplot as plt
 import source as ss
 import scipy
 from lifelines import KaplanMeierFitter
-from sklearn.datasets import load_iris
+#from sklearn.datasets import load_iris
 import pandas as pd
 import scipy.stats as scs
 import seaborn as sns

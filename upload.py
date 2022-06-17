@@ -4,7 +4,7 @@ import numpy as np
 import math
 import pandas as pd 
 from pandas import DataFrame, read_csv
-import statsmodels.api as sm
+#import statsmodels.api as sm
 import xlsxwriter
 from scipy.stats import norm
 import matplotlib.pyplot as plt

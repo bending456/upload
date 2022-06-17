@@ -15,6 +15,7 @@ import scipy.stats as scs
 import seaborn as sns
 import statistics as stat 
 import streamlit as st
+from io import BytesIO
 
 def DataExtract(batchNo,
                 SideID,
@@ -154,15 +155,15 @@ def normal_dist(batchNo,SideID,numOfTest,uploaded_file):
             plt.xlabel(ylabelName)
             plt.ylabel('Frequency/PDF')
             plt.tight_layout()
-            
-            plt.savefig(batchNo+'_ND_'+key+'_side_'+str(ID)+'.png')
 
-            img = batchNo+'_ND_'+key+'_side_'+str(ID)+'.png'
-            st.image(img, caption=f"Image Predicted")
+            output_name = batchNo+'_ND_'+key+'_side_'+str(ID)+'.png'
+            img = BytesIO()
+            plt.savefig(img,format='png')
+            st.image(img, caption=f"Image Predicted")        
             btn = st.download_button(
                 label="Download Image",
                 data=img,
-                file_name=img,
+                file_name=output_name,
                 mime="img/png"
             )
 

@@ -112,7 +112,7 @@ def Exporter(batchNo,
             row += 1
                 
     workbook.close()         
-
+    
     return data1, data2, time
 
 def normal_dist(batchNo,SideID,numOfTest,uploaded_file):

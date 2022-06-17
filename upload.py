@@ -1,21 +1,39 @@
 import streamlit as st
 
+import subprocess
+import sys
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+try:
+	import xlsxwriter
+except:
+	install(xlsxwriter)
+
+try:
+	import scipy
+except:
+	install(scipy)
+
 import numpy as np 
 import math
 import pandas as pd 
 from pandas import DataFrame, read_csv
 #import statsmodels.api as sm
-#import xlsxwriter
+
 from scipy.stats import norm
 import matplotlib.pyplot as plt
 import source as ss
-import scipy
+
 from lifelines import KaplanMeierFitter
 #from sklearn.datasets import load_iris
 import pandas as pd
 import scipy.stats as scs
 import seaborn as sns
 import statistics as stat 
+
+
 
 batchNo = st.text_input('Type Batch # or FileName')
 #SideID1 = st.text_input('Side ID 1')

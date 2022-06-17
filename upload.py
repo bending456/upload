@@ -6,15 +6,11 @@ import sys
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
-try:
-	import xlsxwriter
-except:
-	install(xlsxwriter)
+install(xlsxwriter)
+import xlsxwriter
+install(scipy)
+import scipy
 
-try:
-	import scipy
-except:
-	install(scipy)
 
 import numpy as np 
 import math

@@ -118,9 +118,14 @@ uploaded_file = st.file_uploader("Choose a file")
 
 if uploaded_file is not None:
 	st.write('File has been successfully uploaded')
-	[data1,data2,time] = ss.Exporter(batchNo,SideID,numOfTest,uploaded_file)
 	ss.normal_dist(batchNo,SideID,numOfTest,uploaded_file)
 	ss.ECDFgen(batchNo,SideID,numOfTest,uploaded_file)
 	ss.IChart(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file)
 	ss.AChart(batchNo,SideID,numOfTest,LimitsTarget,uploaded_file)
 	ss.IMChart(batchNo,SideID,numOfTest,uploaded_file)
+	#btn = st.download_button(
+	#	label='Download reorganized excel file',
+    #   data=batchNo+'_SPC_byPython.xlsx',
+	#	filename=batchNo+'_SPC_byPython.xlsx',
+	#	mime="data/xlsx"
+	#	)

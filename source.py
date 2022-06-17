@@ -14,8 +14,7 @@ import pandas as pd
 import scipy.stats as scs
 import seaborn as sns
 import statistics as stat 
-import streamlit as st 
-
+import streamlit as st
 
 def DataExtract(batchNo,
                 SideID,
@@ -116,6 +115,7 @@ def Exporter(batchNo,
     
     return data1, data2, time
 
+
 def normal_dist(batchNo,SideID,numOfTest,uploaded_file):
     [data1,data2,time] = Exporter(batchNo,SideID,numOfTest,uploaded_file)
     keys = data1.keys()
@@ -156,6 +156,16 @@ def normal_dist(batchNo,SideID,numOfTest,uploaded_file):
             plt.tight_layout()
             
             plt.savefig(batchNo+'_ND_'+key+'_side_'+str(ID)+'.png')
+
+            img = batchNo+'_ND_'+key+'_side_'+str(ID)+'.png'
+            st.image(img, caption=f"Image Predicted")
+            btn = st.download_button(
+                label="Download Image",
+                data=img,
+                file_name=img,
+                mime="img/png"
+            )
+
 
         data = data1[key]
         # Fit a normal distribution to

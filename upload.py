@@ -33,8 +33,6 @@ import scipy.stats as scs
 import seaborn as sns
 import statistics as stat 
 
-
-
 batchNo = st.text_input('Type Batch # or FileName')
 #SideID1 = st.text_input('Side ID 1')
 #SideID2 = st.text_input('Side ID 2')
